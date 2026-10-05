@@ -33,6 +33,7 @@ interface GamificationContextType {
   // Quests
   quests: Quest[];
   completeQuest: (questId: string) => { success: boolean; message?: string; xpEarned?: number };
+  uncompleteQuest: (questId: string) => { success: boolean; message?: string };
   postponeQuestToTomorrow: (questId: string) => void;
   deleteQuest: (questId: string) => void;
   addCustomQuest: (quest: Omit<Quest, 'id' | 'isCompletedToday'>) => void;
@@ -429,6 +430,53 @@ export const GamificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     };
   };
 
+  // Revert / Undo completed quest if clicked by accident
+  const uncompleteQuest = (questId: string): { success: boolean; message?: string } => {
+    const quest = quests.find(q => q.id === questId);
+    if (!quest || !quest.isCompletedToday) {
+      return { success: false, message: 'Quest ist nicht als erledigt markiert.' };
+    }
+
+    const xpToDeduct = Math.min(quest.xpReward, 35);
+
+    // Update quest status
+    setQuests(prev =>
+      prev.map(q =>
+        q.id === questId
+          ? { ...q, isCompletedToday: false, completedAt: undefined }
+          : q
+      )
+    );
+
+    // Deduct today XP and total XP
+    setTodayXp(prev => Math.max(0, prev - xpToDeduct));
+    setTotalXp(prev => Math.max(0, prev - xpToDeduct));
+
+    // Deduct category XP
+    setCategoryStats(prev => {
+      const field = `${quest.category}XP` as keyof CategoryStats;
+      return {
+        ...prev,
+        [field]: Math.max(0, ((prev[field] as number) || 0) - xpToDeduct),
+        totalQuestsCompleted: Math.max(0, prev.totalQuestsCompleted - 1)
+      };
+    });
+
+    // Adjust current XP (and level if needed, minimum level 0)
+    let newCurrentXp = currentXp - xpToDeduct;
+    let newLevel = level;
+
+    while (newCurrentXp < 0 && newLevel > 0) {
+      newLevel -= 1;
+      newCurrentXp += getXpRequiredForLevel(newLevel);
+    }
+
+    setLevel(Math.max(0, newLevel));
+    setCurrentXp(Math.max(0, newCurrentXp));
+
+    return { success: true };
+  };
+
   // Postpone daily quest to tomorrow
   const postponeQuestToTomorrow = (questId: string) => {
     const tomorrow = new Date();
@@ -543,6 +591,7 @@ export const GamificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         currentRank,
         quests,
         completeQuest,
+        uncompleteQuest,
         postponeQuestToTomorrow,
         deleteQuest,
         addCustomQuest,

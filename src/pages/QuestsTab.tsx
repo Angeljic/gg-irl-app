@@ -2,33 +2,35 @@ import React, { useState } from 'react';
 import { useGamification } from '../context/GamificationContext';
 import { CATEGORY_INFO } from '../constants/gamificationData';
 import { QuestCategory, QuestDifficulty } from '../types/gamification';
-import { 
-  Plus, 
-  Sparkles, 
-  Check, 
-  Clock, 
-  Calendar, 
-  Trash2, 
-  Filter, 
-  Droplets, 
-  Activity, 
-  BookOpen, 
-  Gamepad2, 
-  Heart, 
+import {
+  Plus,
+  Sparkles,
+  Check,
+  Clock,
+  Calendar,
+  Trash2,
+  Filter,
+  Droplets,
+  Activity,
+  BookOpen,
+  Gamepad2,
+  Heart,
   CheckCircle2,
-  ShieldCheck
+  ShieldCheck,
+  Undo2
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { CustomQuestModal } from '../components/CustomQuestModal';
 
 export const QuestsTab: React.FC = () => {
-  const { 
-    quests, 
-    completeQuest, 
-    postponeQuestToTomorrow, 
-    deleteQuest, 
-    isSpamCooldownActive, 
-    cooldownRemainingSec 
+  const {
+    quests,
+    completeQuest,
+    uncompleteQuest,
+    postponeQuestToTomorrow,
+    deleteQuest,
+    isSpamCooldownActive,
+    cooldownRemainingSec
   } = useGamification();
 
   const [selectedCategory, setSelectedCategory] = useState<QuestCategory | 'all'>('all');
@@ -239,10 +241,22 @@ export const QuestsTab: React.FC = () => {
                     )}
 
                     {quest.isCompletedToday ? (
-                      <span className="text-xs font-bold text-emerald-500 flex items-center gap-1">
-                        <Check className="w-4 h-4" />
-                        <span>Abgeschlossen</span>
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-emerald-500 flex items-center gap-1">
+                          <Check className="w-4 h-4" />
+                          <span>Erledigt</span>
+                        </span>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => uncompleteQuest(quest.id)}
+                          className="h-7 text-[11px] font-semibold text-muted-foreground hover:text-foreground border-border hover:bg-muted rounded-xl flex items-center gap-1 px-2.5"
+                          title="Als nicht erledigt markieren (XP rückgängig)"
+                        >
+                          <Undo2 className="w-3.5 h-3.5" />
+                          <span>Rückgängig</span>
+                        </Button>
+                      </div>
                     ) : (
                       <Button
                         size="sm"

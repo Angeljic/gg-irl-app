@@ -19,7 +19,8 @@ import {
   BookOpen,
   Heart,
   Skull,
-  Award
+  Award,
+  Undo2
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { GamerTagMatchModal } from '../components/GamerTagMatchModal';
@@ -39,6 +40,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateTab }) => {
     currentRank,
     quests,
     completeQuest,
+    uncompleteQuest,
     postponeQuestToTomorrow,
     badges,
     profile,
@@ -287,6 +289,39 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateTab }) => {
           >
             Alle {activeDailyQuests.length} Quests ansehen →
           </Button>
+        )}
+
+        {/* Heute bereits erledigte Quests mit Rückgängig-Option */}
+        {completedTodayCount > 0 && (
+          <div className="p-3 rounded-2xl bg-muted/20 border border-emerald-500/20 space-y-2 mt-2">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-bold text-emerald-500 flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>Heute abgeschlossen ({completedTodayCount})</span>
+              </span>
+              <span className="text-[10px] text-muted-foreground">Aus Versehen geklickt?</span>
+            </div>
+            <div className="space-y-1.5">
+              {quests.filter(q => q.isCompletedToday).slice(0, 3).map(cq => (
+                <div
+                  key={cq.id}
+                  className="flex items-center justify-between p-2 rounded-xl bg-card/60 border border-border text-xs"
+                >
+                  <span className="text-muted-foreground truncate line-through pr-2">
+                    {cq.title}
+                  </span>
+                  <button
+                    onClick={() => uncompleteQuest(cq.id)}
+                    className="flex items-center gap-1 text-[11px] font-semibold text-purple-400 hover:text-purple-300 shrink-0 px-2 py-0.5 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20"
+                    title="Als nicht erledigt zurücksetzen"
+                  >
+                    <Undo2 className="w-3 h-3" />
+                    <span>Rückgängig</span>
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </div>
 
