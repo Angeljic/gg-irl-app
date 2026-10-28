@@ -2,35 +2,29 @@ import React, { useState } from 'react';
 import { useGamification } from '../context/GamificationContext';
 import { CATEGORY_INFO } from '../constants/gamificationData';
 import { QuestCategory, QuestDifficulty } from '../types/gamification';
-import {
-  Plus,
-  Sparkles,
-  Check,
-  Clock,
-  Calendar,
-  Trash2,
-  Filter,
-  Droplets,
-  Activity,
-  BookOpen,
-  Gamepad2,
-  Heart,
-  CheckCircle2,
-  ShieldCheck,
+import { 
+  Plus, 
+  Sparkles, 
+  Check, 
+  Trash2, 
+  Droplets, 
+  Activity, 
+  BookOpen, 
+  Gamepad2, 
+  Heart, 
   Undo2
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { CustomQuestModal } from '../components/CustomQuestModal';
 
 export const QuestsTab: React.FC = () => {
-  const {
-    quests,
-    completeQuest,
+  const { 
+    quests, 
+    completeQuest, 
     uncompleteQuest,
-    postponeQuestToTomorrow,
-    deleteQuest,
-    isSpamCooldownActive,
-    cooldownRemainingSec
+    postponeQuestToTomorrow, 
+    deleteQuest, 
+    isSpamCooldownActive
   } = useGamification();
 
   const [selectedCategory, setSelectedCategory] = useState<QuestCategory | 'all'>('all');
@@ -62,20 +56,20 @@ export const QuestsTab: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4 pb-24 animate-in fade-in duration-300">
+    <div className="space-y-5 pb-28 animate-in fade-in duration-300">
       {/* Top Title & Add Button */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl font-black tracking-tight text-foreground">
+          <h2 className="text-xl sm:text-2xl font-black tracking-tight text-foreground">
             QUESTS & AUFGABEN
           </h2>
-          <p className="text-xs text-muted-foreground">
-            Verdiene XP in allen 5 Lebensbereichen (Max. 35 XP)
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Verdiene XP in allen 5 Lebensbereichen (Max. 35 XP pro Quest)
           </p>
         </div>
         <Button
           onClick={() => setIsModalOpen(true)}
-          className="rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs shadow-md shadow-purple-600/30 gap-1"
+          className="rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs shadow-md shadow-purple-600/25 gap-1.5 px-3.5 py-2 shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Eigene Quest</span>
@@ -83,16 +77,16 @@ export const QuestsTab: React.FC = () => {
       </div>
 
       {/* Category Pills Slider */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
         <button
           onClick={() => setSelectedCategory('all')}
-          className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-all ${
+          className={`px-3.5 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
             selectedCategory === 'all'
               ? 'bg-purple-600 text-white shadow-sm'
-              : 'bg-muted/40 text-muted-foreground hover:bg-muted'
+              : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
           }`}
         >
-          Alle
+          Alle Bereiche
         </button>
         {(Object.keys(CATEGORY_INFO) as QuestCategory[]).map(catKey => {
           const cat = CATEGORY_INFO[catKey];
@@ -101,10 +95,10 @@ export const QuestsTab: React.FC = () => {
             <button
               key={catKey}
               onClick={() => setSelectedCategory(catKey)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-all ${
+              className={`px-3.5 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
                 isSelected
                   ? 'bg-purple-600 text-white shadow-sm'
-                  : 'bg-muted/40 text-muted-foreground hover:bg-muted'
+                  : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
               }`}
             >
               {cat.name.split(' ')[0]}
@@ -114,33 +108,33 @@ export const QuestsTab: React.FC = () => {
       </div>
 
       {/* Status Segment Control */}
-      <div className="grid grid-cols-3 p-1 rounded-2xl bg-muted/50 text-xs font-bold border border-border">
+      <div className="grid grid-cols-3 p-1 rounded-2xl bg-muted/50 text-xs font-bold border border-border/80">
         <button
           onClick={() => setFilterMode('active')}
-          className={`py-1.5 rounded-xl transition-all ${
+          className={`py-2 rounded-xl transition-all ${
             filterMode === 'active'
               ? 'bg-card text-foreground shadow-sm'
-              : 'text-muted-foreground'
+              : 'text-muted-foreground hover:text-foreground'
           }`}
         >
           Aktiv ({quests.filter(q => !q.isCompletedToday && (!q.postponedUntil || q.postponedUntil <= todayStr)).length})
         </button>
         <button
           onClick={() => setFilterMode('completed')}
-          className={`py-1.5 rounded-xl transition-all ${
+          className={`py-2 rounded-xl transition-all ${
             filterMode === 'completed'
               ? 'bg-card text-foreground shadow-sm'
-              : 'text-muted-foreground'
+              : 'text-muted-foreground hover:text-foreground'
           }`}
         >
           Erledigt ({quests.filter(q => q.isCompletedToday).length})
         </button>
         <button
           onClick={() => setFilterMode('postponed')}
-          className={`py-1.5 rounded-xl transition-all ${
+          className={`py-2 rounded-xl transition-all ${
             filterMode === 'postponed'
               ? 'bg-card text-foreground shadow-sm'
-              : 'text-muted-foreground'
+              : 'text-muted-foreground hover:text-foreground'
           }`}
         >
           Morgen ({quests.filter(q => !q.isCompletedToday && q.postponedUntil && q.postponedUntil > todayStr).length})
@@ -149,19 +143,18 @@ export const QuestsTab: React.FC = () => {
 
       {/* Quest Cards List */}
       {filteredQuests.length === 0 ? (
-        <div className="p-8 rounded-3xl bg-card border border-border text-center space-y-2">
-          <Sparkles className="w-8 h-8 mx-auto text-purple-400" />
+        <div className="p-10 rounded-3xl bg-card border border-border text-center space-y-3">
+          <Sparkles className="w-10 h-10 mx-auto text-purple-400" />
           <h4 className="text-sm font-bold text-foreground">Keine Quests in dieser Ansicht</h4>
-          <p className="text-xs text-muted-foreground max-w-xs mx-auto">
+          <p className="text-xs text-muted-foreground max-w-xs mx-auto leading-relaxed">
             {filterMode === 'active' 
-              ? 'Du hast alle Quests abgeschlossen oder verschoben. Erstelle eine neue!' 
+              ? 'Du hast alle Aufgaben dieser Kategorie gemeistert! Erstelle eine neue Quest.' 
               : 'Aktuell keine Einträge in diesem Filter.'}
           </p>
           {filterMode === 'active' && (
             <Button
-              size="sm"
               onClick={() => setIsModalOpen(true)}
-              className="rounded-xl bg-purple-600 text-white text-xs mt-2"
+              className="rounded-2xl bg-purple-600 text-white text-xs mt-2 px-4"
             >
               + Neue Quest anlegen
             </Button>
@@ -174,30 +167,30 @@ export const QuestsTab: React.FC = () => {
             return (
               <div
                 key={quest.id}
-                className={`rounded-2xl border transition-all p-4 ${
+                className={`rounded-2xl border transition-all p-4.5 ${
                   quest.isCompletedToday
-                    ? 'bg-card/50 border-emerald-500/30 opacity-75'
+                    ? 'bg-card/60 border-emerald-500/30 opacity-80'
                     : 'bg-card border-border hover:border-purple-500/40 shadow-sm'
                 }`}
               >
-                <div className="flex items-start justify-between gap-3 mb-2">
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-muted/60 flex items-center justify-center shrink-0 border border-border">
+                <div className="flex items-start justify-between gap-3 mb-2.5">
+                  <div className="flex items-start gap-3.5">
+                    <div className="w-11 h-11 rounded-2xl bg-muted/60 flex items-center justify-center shrink-0 border border-border">
                       {renderIcon(quest.iconName)}
                     </div>
                     <div>
-                      <div className="flex flex-wrap items-center gap-1.5">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${catInfo.bgLight}`}>
                           {catInfo.name.split(' ')[0]}
                         </span>
-                        <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-purple-500/15 text-purple-400">
+                        <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-400">
                           +{quest.xpReward} XP
                         </span>
                         <span className="text-[10px] text-muted-foreground uppercase font-mono">
                           {quest.difficulty}
                         </span>
                       </div>
-                      <h4 className="text-sm font-black text-foreground mt-1">
+                      <h4 className="text-sm font-black text-foreground mt-1.5">
                         {quest.title}
                       </h4>
                     </div>
@@ -206,7 +199,7 @@ export const QuestsTab: React.FC = () => {
                   {quest.custom && (
                     <button
                       onClick={() => deleteQuest(quest.id)}
-                      className="p-1 rounded-lg text-muted-foreground hover:text-rose-500 transition-colors"
+                      className="p-1.5 rounded-xl text-muted-foreground hover:text-rose-500 hover:bg-rose-500/10 transition-colors"
                       title="Löschen"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -214,19 +207,19 @@ export const QuestsTab: React.FC = () => {
                   )}
                 </div>
 
-                <p className="text-xs text-muted-foreground pl-13 mb-3 leading-relaxed">
+                <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
                   {quest.description}
                 </p>
 
                 {quest.skillFocus && (
-                  <div className="mb-3 text-[11px] font-semibold text-purple-400 bg-purple-500/10 p-2 rounded-xl border border-purple-500/20">
+                  <div className="mb-3 text-[11px] font-semibold text-purple-400 bg-purple-500/10 p-2.5 rounded-xl border border-purple-500/20">
                     🎯 Skill-Fokus: {quest.skillFocus}
                   </div>
                 )}
 
                 {/* Footer action buttons */}
-                <div className="flex items-center justify-between pt-2 border-t border-border/60">
-                  <span className="text-[10px] text-muted-foreground">
+                <div className="flex items-center justify-between pt-3 border-t border-border/60">
+                  <span className="text-[11px] text-muted-foreground">
                     {quest.isDaily ? 'Tägliche Wiederholung' : 'Einmalige Quest'}
                   </span>
 
@@ -234,9 +227,9 @@ export const QuestsTab: React.FC = () => {
                     {!quest.isCompletedToday && (
                       <button
                         onClick={() => postponeQuestToTomorrow(quest.id)}
-                        className="text-xs font-semibold text-muted-foreground hover:text-foreground px-2 py-1 rounded-lg"
+                        className="text-xs font-semibold text-muted-foreground hover:text-foreground px-2.5 py-1 rounded-xl hover:bg-muted transition-colors"
                       >
-                        Auf morgen verschieben
+                        Auf morgen
                       </button>
                     )}
 
@@ -262,7 +255,7 @@ export const QuestsTab: React.FC = () => {
                         size="sm"
                         disabled={isSpamCooldownActive}
                         onClick={() => completeQuest(quest.id)}
-                        className="rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs px-3 shadow-sm shadow-purple-600/30"
+                        className="rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs px-3.5 py-1.5 shadow-sm shadow-purple-600/30"
                       >
                         Abschließen ✓
                       </Button>

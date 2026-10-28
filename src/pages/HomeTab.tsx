@@ -1,26 +1,22 @@
 import React, { useState } from 'react';
 import { useGamification } from '../context/GamificationContext';
-import { CATEGORY_INFO } from '../constants/gamificationData';
 import { 
   Trophy, 
   Flame, 
   Sparkles, 
   CheckCircle2, 
   ArrowRight, 
-  Calendar, 
-  Clock, 
   Gamepad2, 
   Plus, 
-  Zap, 
   ChevronRight,
   TrendingUp,
   Droplets,
   Activity,
   BookOpen,
   Heart,
-  Skull,
   Award,
-  Undo2
+  Undo2,
+  CalendarDays
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { GamerTagMatchModal } from '../components/GamerTagMatchModal';
@@ -45,8 +41,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateTab }) => {
     badges,
     profile,
     matches,
-    isSpamCooldownActive,
-    cooldownRemainingSec
+    isSpamCooldownActive
   } = useGamification();
 
   const [isMatchModalOpen, setIsMatchModalOpen] = useState(false);
@@ -62,10 +57,10 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateTab }) => {
     (!q.postponedUntil || q.postponedUntil <= todayDateStr)
   );
 
-  const completedTodayCount = quests.filter(q => q.isCompletedToday).length;
+  const completedTodayQuests = quests.filter(q => q.isCompletedToday);
+  const completedTodayCount = completedTodayQuests.length;
   const recentBadges = badges.filter(b => b.unlocked).slice(0, 3);
 
-  // Helper icon for quests
   const renderQuestIcon = (iconName: string) => {
     switch (iconName) {
       case 'Droplets': return <Droplets className="w-5 h-5 text-cyan-400" />;
@@ -78,67 +73,67 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateTab }) => {
   };
 
   return (
-    <div className="space-y-5 pb-24 animate-in fade-in duration-300">
+    <div className="space-y-6 pb-28 animate-in fade-in duration-300">
       {/* Hero Level & XP Overview Card */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-950/70 via-card to-background border-2 border-purple-500/30 p-5 shadow-xl glow-purple">
-        {/* Ambient background decoration */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-950/60 via-card to-background border border-purple-500/25 p-6 shadow-xl glow-purple">
+        {/* Ambient glow in background */}
         <div 
-          className="absolute -right-16 -top-16 w-44 h-44 rounded-full blur-3xl opacity-25 pointer-events-none"
+          className="absolute -right-20 -top-20 w-56 h-56 rounded-full blur-3xl opacity-20 pointer-events-none"
           style={{ backgroundColor: currentRank.color }}
         />
 
-        <div className="flex items-start justify-between mb-4">
-          <div>
+        {/* Top Header Row with Level & Today's XP badge */}
+        <div className="flex items-start justify-between gap-4 mb-6">
+          <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-black tracking-widest uppercase px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 border border-purple-500/30">
+              <span className="text-[11px] font-black tracking-widest uppercase px-2.5 py-1 rounded-lg bg-purple-500/15 text-purple-400 border border-purple-500/25">
                 OVERALL LEVEL
               </span>
               <span className="text-xs font-mono font-bold text-muted-foreground">
                 {currentRank.tier} Rang
               </span>
             </div>
-            <div className="flex items-baseline gap-2 mt-1">
-              <h2 className="text-4xl font-black tracking-tight text-foreground font-mono">
+            
+            <div className="flex items-baseline gap-3 pt-1">
+              <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-foreground font-mono">
                 LEVEL {level}
               </h2>
-              <span className="text-xs font-bold text-purple-400">
+              <span className="text-sm font-bold text-purple-400">
                 {currentRank.title}
               </span>
             </div>
           </div>
 
-          {/* Today's XP badge */}
-          <div className="text-right">
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-black">
-              <TrendingUp className="w-3.5 h-3.5" />
+          <div className="shrink-0 pt-1">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-500 text-xs font-black shadow-sm">
+              <TrendingUp className="w-4 h-4" />
               <span>+{todayXp} XP HEUTE</span>
             </span>
           </div>
         </div>
 
-        {/* Circular / Horizontal XP Bar */}
-        <div className="space-y-1.5 mb-4">
+        {/* Progress Bar & Numerical Breakdown */}
+        <div className="space-y-2.5 mb-6">
           <div className="flex items-center justify-between text-xs font-semibold">
             <span className="text-muted-foreground">Fortschritt zum nächsten Level</span>
-            <span className="font-mono text-purple-400 font-bold">
+            <span className="font-mono text-purple-400 font-bold text-sm">
               {currentXp.toLocaleString()} / {xpRequired.toLocaleString()} XP ({xpProgressPercent}%)
             </span>
           </div>
 
-          {/* XP Progress Bar */}
-          <div className="h-3.5 w-full rounded-full bg-muted/70 p-0.5 overflow-hidden border border-purple-500/20">
+          <div className="h-4 w-full rounded-full bg-muted/80 p-0.5 overflow-hidden border border-purple-500/20">
             <div 
-              className="h-full rounded-full bg-gradient-to-r from-purple-600 via-indigo-500 to-purple-400 transition-all duration-500 ease-out shadow-sm shadow-purple-500/50"
+              className="h-full rounded-full bg-gradient-to-r from-purple-600 via-indigo-500 to-purple-400 transition-all duration-500 ease-out shadow-sm shadow-purple-500/40"
               style={{ width: `${Math.max(xpProgressPercent, 3)}%` }}
             />
           </div>
         </div>
 
-        {/* Action strip: Gamer Tag & Continue Progress */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-purple-500/20">
+        {/* Action Strip: Quick LoL Match Review & Rank Progression */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-purple-500/15">
           <button
             onClick={() => setIsMatchModalOpen(true)}
-            className="flex items-center gap-1.5 text-xs font-bold text-purple-400 hover:text-purple-300 transition-colors"
+            className="flex items-center gap-2 text-xs font-bold text-purple-400 hover:text-purple-300 transition-colors py-1"
           >
             <Gamepad2 className="w-4 h-4" />
             <span>LoL Match Review (+35 XP)</span>
@@ -146,59 +141,60 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateTab }) => {
 
           <button
             onClick={() => onNavigateTab('levels')}
-            className="flex items-center gap-1 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors py-1"
           >
             <span>Rangbaum ansehen</span>
-            <ChevronRight className="w-3.5 h-3.5" />
+            <ChevronRight className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      {/* LoL / GamerTag Quick Banner */}
-      <div className="p-3.5 rounded-2xl bg-gradient-to-r from-purple-900/30 via-indigo-900/20 to-purple-950/40 border border-purple-500/30 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-purple-300">
-            <Gamepad2 className="w-5 h-5" />
+      {/* LoL / GamerTag Quick Match Feature Card */}
+      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-purple-950/40 via-card to-indigo-950/30 border border-purple-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+        <div className="flex items-center gap-3.5">
+          <div className="w-11 h-11 rounded-2xl bg-purple-600/15 border border-purple-500/30 flex items-center justify-center text-purple-400 shrink-0">
+            <Gamepad2 className="w-6 h-6" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-black text-foreground font-mono">
-                {profile.gamertag || 'GamerTag hinzufügen'}
+              <span className="text-sm font-black text-foreground font-mono">
+                {profile.gamertag || 'GamerTag verknüpfen'}
               </span>
-              <span className="text-[10px] px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/25">
                 LoL Tracker
               </span>
             </div>
-            <p className="text-[11px] text-muted-foreground">
+            <p className="text-xs text-muted-foreground mt-0.5">
               {matches.length > 0 
                 ? `Zuletzt: ${matches[0].championOrRole} (${matches[0].focusSkill})`
-                : 'Trage Matches ein: Deaths & Wave Management analysieren'}
+                : 'Trage Matches ein: Deaths, Wave Management & Trading analysieren'}
             </p>
           </div>
         </div>
+
         <Button
-          size="sm"
           onClick={() => setIsMatchModalOpen(true)}
-          className="rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow-md shadow-purple-600/30"
+          className="rounded-2xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-4 py-2 shadow-md shadow-purple-600/25 self-start sm:self-auto shrink-0"
         >
-          Review
+          Match Review
         </Button>
       </div>
 
-      {/* Daily Quests Header & List */}
-      <div className="space-y-3">
+      {/* Daily Quests Section with clean spacious cards */}
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h3 className="text-base font-black tracking-tight text-foreground flex items-center gap-1.5">
-              <span>TÄGLICHE QUESTS</span>
-              <span className="text-xs font-mono font-bold text-muted-foreground">
-                ({activeDailyQuests.length} offen)
-              </span>
+            <h3 className="text-base font-black tracking-tight text-foreground">
+              TÄGLICHE QUESTS
             </h3>
+            <span className="text-xs font-mono font-bold text-muted-foreground">
+              ({activeDailyQuests.length} offen)
+            </span>
           </div>
+
           <button
             onClick={() => setIsQuestModalOpen(true)}
-            className="flex items-center gap-1 text-xs font-bold text-purple-400 hover:text-purple-300"
+            className="flex items-center gap-1.5 text-xs font-bold text-purple-500 hover:text-purple-400 transition-colors py-1 px-2 rounded-xl hover:bg-purple-500/10"
           >
             <Plus className="w-4 h-4" />
             <span>Quest erstellen</span>
@@ -206,63 +202,60 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateTab }) => {
         </div>
 
         {activeDailyQuests.length === 0 ? (
-          <div className="p-6 rounded-3xl bg-card border border-border text-center space-y-2">
-            <div className="w-12 h-12 mx-auto rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-              <CheckCircle2 className="w-6 h-6" />
+          <div className="p-8 rounded-3xl bg-card border border-border text-center space-y-3">
+            <div className="w-14 h-14 mx-auto rounded-full bg-emerald-500/15 text-emerald-400 flex items-center justify-center">
+              <CheckCircle2 className="w-7 h-7" />
             </div>
-            <h4 className="text-sm font-bold text-foreground">Alle Tagesquests gemeistert!</h4>
-            <p className="text-xs text-muted-foreground max-w-xs mx-auto">
-              Starke Leistung! Erstelle eine eigene Quest oder trage ein Game Review ein, um weiter XP zu sammeln.
+            <h4 className="text-base font-bold text-foreground">Alle Tagesquests gemeistert!</h4>
+            <p className="text-xs text-muted-foreground max-w-sm mx-auto leading-relaxed">
+              Klasse Arbeit! Du hast alle Tagesaufgaben abgeschlossen. Erstelle eine persönliche Quest oder mache ein Match-Review.
             </p>
-            <div className="pt-2 flex justify-center gap-2">
+            <div className="pt-2 flex justify-center gap-2.5">
               <Button
                 variant="outline"
-                size="sm"
                 onClick={() => setIsQuestModalOpen(true)}
-                className="rounded-xl text-xs"
+                className="rounded-2xl text-xs font-semibold px-4"
               >
                 + Neue Quest
               </Button>
               <Button
-                size="sm"
                 onClick={() => setIsMatchModalOpen(true)}
-                className="rounded-xl bg-purple-600 text-white text-xs"
+                className="rounded-2xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-4 shadow-md shadow-purple-600/25"
               >
                 LoL Match Review
               </Button>
             </div>
           </div>
         ) : (
-          <div className="space-y-2.5">
+          <div className="space-y-3">
             {activeDailyQuests.slice(0, 4).map(quest => (
               <div
                 key={quest.id}
-                className="group relative rounded-2xl bg-card border border-border hover:border-purple-500/50 p-3.5 transition-all shadow-sm flex items-center justify-between gap-3"
+                className="rounded-2xl bg-card border border-border/80 hover:border-purple-500/40 p-4 transition-all shadow-sm flex items-center justify-between gap-4"
               >
-                <div className="flex items-center gap-3 overflow-hidden">
-                  <div className="w-10 h-10 rounded-xl bg-muted/60 flex items-center justify-center shrink-0 border border-border">
+                <div className="flex items-center gap-3.5 overflow-hidden">
+                  <div className="w-11 h-11 rounded-2xl bg-muted/50 flex items-center justify-center shrink-0 border border-border/60">
                     {renderQuestIcon(quest.iconName)}
                   </div>
                   <div className="truncate">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-black text-foreground truncate">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-black text-foreground truncate">
                         {quest.title}
                       </span>
-                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-purple-500/15 text-purple-400 font-bold shrink-0">
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-400 font-bold shrink-0">
                         +{quest.xpReward} XP
                       </span>
                     </div>
-                    <p className="text-[11px] text-muted-foreground truncate">
+                    <p className="text-xs text-muted-foreground truncate mt-0.5">
                       {quest.description}
                     </p>
                   </div>
                 </div>
 
-                {/* Actions: Postpone or Complete */}
-                <div className="flex items-center gap-1.5 shrink-0">
+                <div className="flex items-center gap-2 shrink-0">
                   <button
                     onClick={() => postponeQuestToTomorrow(quest.id)}
-                    className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted text-[11px] font-medium"
+                    className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted text-xs font-medium transition-colors"
                     title="Auf morgen verschieben"
                   >
                     Morgen
@@ -271,7 +264,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateTab }) => {
                     size="sm"
                     disabled={isSpamCooldownActive}
                     onClick={() => completeQuest(quest.id)}
-                    className="rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3 py-1.5 shadow-sm shadow-purple-600/30"
+                    className="rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3.5 py-2 shadow-sm shadow-purple-600/25"
                   >
                     Fertig ✓
                   </Button>
@@ -281,41 +274,32 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateTab }) => {
           </div>
         )}
 
-        {activeDailyQuests.length > 4 && (
-          <Button
-            variant="ghost"
-            onClick={() => onNavigateTab('quests')}
-            className="w-full text-xs font-bold text-purple-400 hover:text-purple-300"
-          >
-            Alle {activeDailyQuests.length} Quests ansehen →
-          </Button>
-        )}
-
         {/* Heute bereits erledigte Quests mit Rückgängig-Option */}
         {completedTodayCount > 0 && (
-          <div className="p-3 rounded-2xl bg-muted/20 border border-emerald-500/20 space-y-2 mt-2">
+          <div className="p-4 rounded-3xl bg-muted/20 border border-emerald-500/20 space-y-3 mt-3">
             <div className="flex items-center justify-between text-xs">
               <span className="font-bold text-emerald-500 flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5" />
+                <CheckCircle2 className="w-4 h-4" />
                 <span>Heute abgeschlossen ({completedTodayCount})</span>
               </span>
-              <span className="text-[10px] text-muted-foreground">Aus Versehen geklickt?</span>
+              <span className="text-[11px] text-muted-foreground">Aus Versehen geklickt?</span>
             </div>
-            <div className="space-y-1.5">
-              {quests.filter(q => q.isCompletedToday).slice(0, 3).map(cq => (
-                <div
-                  key={cq.id}
-                  className="flex items-center justify-between p-2 rounded-xl bg-card/60 border border-border text-xs"
+
+            <div className="space-y-2">
+              {completedTodayQuests.slice(0, 3).map(cq => (
+                <div 
+                  key={cq.id} 
+                  className="flex items-center justify-between p-2.5 rounded-2xl bg-card border border-border text-xs gap-2"
                 >
-                  <span className="text-muted-foreground truncate line-through pr-2">
+                  <span className="text-muted-foreground truncate line-through">
                     {cq.title}
                   </span>
                   <button
                     onClick={() => uncompleteQuest(cq.id)}
-                    className="flex items-center gap-1 text-[11px] font-semibold text-purple-400 hover:text-purple-300 shrink-0 px-2 py-0.5 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20"
+                    className="flex items-center gap-1.5 text-xs font-semibold text-purple-400 hover:text-purple-300 shrink-0 px-2.5 py-1 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 transition-colors"
                     title="Als nicht erledigt zurücksetzen"
                   >
-                    <Undo2 className="w-3 h-3" />
+                    <Undo2 className="w-3.5 h-3.5" />
                     <span>Rückgängig</span>
                   </button>
                 </div>
@@ -323,12 +307,22 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateTab }) => {
             </div>
           </div>
         )}
+
+        {activeDailyQuests.length > 4 && (
+          <Button
+            variant="ghost"
+            onClick={() => onNavigateTab('quests')}
+            className="w-full text-xs font-bold text-purple-400 hover:text-purple-300 py-3"
+          >
+            Alle {activeDailyQuests.length} Quests ansehen →
+          </Button>
+        )}
       </div>
 
       {/* Recently Earned Badges Strip */}
-      <div className="p-4 rounded-3xl bg-muted/30 border border-border space-y-2.5">
+      <div className="p-5 rounded-3xl bg-card border border-border space-y-3.5 shadow-sm">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs font-black uppercase text-foreground">
+          <div className="flex items-center gap-2 text-xs font-black uppercase text-foreground">
             <Award className="w-4 h-4 text-amber-400" />
             <span>Kürzlich verdiente Abzeichen</span>
           </div>
@@ -341,19 +335,19 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateTab }) => {
         </div>
 
         {recentBadges.length > 0 ? (
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-2.5">
             {recentBadges.map(badge => (
               <div 
                 key={badge.id}
-                className="p-2.5 rounded-2xl bg-card border border-amber-500/30 text-center flex flex-col items-center"
+                className="p-3 rounded-2xl bg-muted/30 border border-amber-500/30 text-center flex flex-col items-center"
               >
-                <div className="w-8 h-8 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mb-1">
+                <div className="w-9 h-9 rounded-full bg-amber-500/15 text-amber-400 flex items-center justify-center mb-1.5">
                   <Award className="w-4 h-4" />
                 </div>
-                <span className="text-[11px] font-bold text-foreground truncate w-full">
+                <span className="text-xs font-bold text-foreground truncate w-full">
                   {badge.title}
                 </span>
-                <span className="text-[9px] text-amber-500 font-mono uppercase">
+                <span className="text-[10px] text-amber-500 font-mono uppercase mt-0.5">
                   {badge.rarity}
                 </span>
               </div>
@@ -366,9 +360,9 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateTab }) => {
         )}
       </div>
 
-      {/* Motivational Bottom Anchor */}
+      {/* Motto & Clean Footer Space */}
       <div className="text-center pt-2">
-        <p className="text-xs text-muted-foreground font-semibold">
+        <p className="text-xs text-muted-foreground font-semibold tracking-wider">
           don´t give up, rise higher
         </p>
       </div>
