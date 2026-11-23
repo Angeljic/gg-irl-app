@@ -71,13 +71,13 @@ export const OnboardingModal: React.FC = () => {
             </div>
 
             <div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-purple-400 block mb-1">
-                WILLKOMMEN BEI RISE
+              <span className="text-[11px] font-black uppercase tracking-widest text-purple-400 block mb-1">
+                WILLKOMMEN BEI GGIRL
               </span>
-              <h2 className="text-2xl font-black tracking-tight text-foreground leading-tight">
+              <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground leading-tight">
                 YOU ARE THE STAR
               </h2>
-              <p className="text-sm font-black text-purple-500 uppercase tracking-wide">
+              <p className="text-sm font-black text-purple-500 uppercase tracking-wide mt-1">
                 DONT GIVE UP LEVEL UP
               </p>
             </div>

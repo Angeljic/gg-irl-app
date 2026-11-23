@@ -211,7 +211,7 @@ export const INITIAL_BADGES: Badge[] = [
   {
     id: 'badge-first-step',
     title: 'Erster Schritt',
-    description: 'Schließe deine allererste Quest in RISE ab.',
+    description: 'Schließe deine allererste Quest in GGIRL ab.',
     category: 'general',
     rarity: 'common',
     icon: 'Footprints',
