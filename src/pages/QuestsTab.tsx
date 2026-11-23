@@ -77,10 +77,10 @@ export const QuestsTab: React.FC = () => {
       </div>
 
       {/* Category Pills Slider */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+      <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-none pt-1">
         <button
           onClick={() => setSelectedCategory('all')}
-          className={`px-3.5 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
+          className={`px-4 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
             selectedCategory === 'all'
               ? 'bg-purple-600 text-white shadow-sm'
               : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
@@ -95,7 +95,7 @@ export const QuestsTab: React.FC = () => {
             <button
               key={catKey}
               onClick={() => setSelectedCategory(catKey)}
-              className={`px-3.5 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
+              className={`px-4 py-2 rounded-2xl text-xs font-bold shrink-0 transition-all ${
                 isSelected
                   ? 'bg-purple-600 text-white shadow-sm'
                   : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
@@ -107,11 +107,11 @@ export const QuestsTab: React.FC = () => {
         })}
       </div>
 
-      {/* Status Segment Control */}
-      <div className="grid grid-cols-3 p-1 rounded-2xl bg-muted/50 text-xs font-bold border border-border/80">
+      {/* Status Segment Control with extra vertical breathing space */}
+      <div className="my-4 grid grid-cols-3 p-1.5 rounded-2xl bg-muted/50 text-xs font-bold border border-border/80 shadow-sm">
         <button
           onClick={() => setFilterMode('active')}
-          className={`py-2 rounded-xl transition-all ${
+          className={`py-2.5 rounded-xl transition-all ${
             filterMode === 'active'
               ? 'bg-card text-foreground shadow-sm'
               : 'text-muted-foreground hover:text-foreground'
@@ -121,7 +121,7 @@ export const QuestsTab: React.FC = () => {
         </button>
         <button
           onClick={() => setFilterMode('completed')}
-          className={`py-2 rounded-xl transition-all ${
+          className={`py-2.5 rounded-xl transition-all ${
             filterMode === 'completed'
               ? 'bg-card text-foreground shadow-sm'
               : 'text-muted-foreground hover:text-foreground'
@@ -131,7 +131,7 @@ export const QuestsTab: React.FC = () => {
         </button>
         <button
           onClick={() => setFilterMode('postponed')}
-          className={`py-2 rounded-xl transition-all ${
+          className={`py-2.5 rounded-xl transition-all ${
             filterMode === 'postponed'
               ? 'bg-card text-foreground shadow-sm'
               : 'text-muted-foreground hover:text-foreground'
@@ -141,33 +141,33 @@ export const QuestsTab: React.FC = () => {
         </button>
       </div>
 
-      {/* Quest Cards List */}
+      {/* Quest Cards List with generous spacing */}
       {filteredQuests.length === 0 ? (
-        <div className="p-10 rounded-3xl bg-card border border-border text-center space-y-3">
+        <div className="p-12 rounded-3xl bg-card border border-border text-center space-y-3 mt-4">
           <Sparkles className="w-10 h-10 mx-auto text-purple-400" />
           <h4 className="text-sm font-bold text-foreground">Keine Quests in dieser Ansicht</h4>
           <p className="text-xs text-muted-foreground max-w-xs mx-auto leading-relaxed">
-            {filterMode === 'active' 
-              ? 'Du hast alle Aufgaben dieser Kategorie gemeistert! Erstelle eine neue Quest.' 
+            {filterMode === 'active'
+              ? 'Du hast alle Aufgaben dieser Kategorie gemeistert! Erstelle eine neue Quest.'
               : 'Aktuell keine Einträge in diesem Filter.'}
           </p>
           {filterMode === 'active' && (
             <Button
               onClick={() => setIsModalOpen(true)}
-              className="rounded-2xl bg-purple-600 text-white text-xs mt-2 px-4"
+              className="rounded-2xl bg-purple-600 text-white text-xs mt-3 px-5 py-2.5"
             >
               + Neue Quest anlegen
             </Button>
           )}
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-5 pt-2">
           {filteredQuests.map(quest => {
             const catInfo = CATEGORY_INFO[quest.category];
             return (
               <div
                 key={quest.id}
-                className={`rounded-2xl border transition-all p-4.5 ${
+                className={`rounded-2xl border transition-all p-5 ${
                   quest.isCompletedToday
                     ? 'bg-card/60 border-emerald-500/30 opacity-80'
                     : 'bg-card border-border hover:border-purple-500/40 shadow-sm'

@@ -150,9 +150,9 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateTab }) => {
       </div>
 
       {/* LoL / GamerTag Quick Match Feature Card */}
-      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-purple-950/40 via-card to-indigo-950/30 border border-purple-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+      <div className="mb-10 p-5 rounded-3xl bg-gradient-to-r from-purple-950/40 via-card to-indigo-950/30 border border-purple-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
         <div className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-2xl bg-purple-600/15 border border-purple-500/30 flex items-center justify-center text-purple-400 shrink-0">
+          <div className="w-12 h-12 rounded-2xl bg-purple-600/15 border border-purple-500/30 flex items-center justify-center text-purple-400 shrink-0">
             <Gamepad2 className="w-6 h-6" />
           </div>
           <div>
@@ -164,8 +164,8 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateTab }) => {
                 LoL Tracker
               </span>
             </div>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {matches.length > 0 
+            <p className="text-xs text-muted-foreground mt-1">
+              {matches.length > 0
                 ? `Zuletzt: ${matches[0].championOrRole} (${matches[0].focusSkill})`
                 : 'Trage Matches ein: Deaths, Wave Management & Trading analysieren'}
             </p>
@@ -174,17 +174,17 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateTab }) => {
 
         <Button
           onClick={() => setIsMatchModalOpen(true)}
-          className="rounded-2xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-4 py-2 shadow-md shadow-purple-600/25 self-start sm:self-auto shrink-0"
+          className="rounded-2xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-4 py-2.5 shadow-md shadow-purple-600/25 self-start sm:self-auto shrink-0"
         >
           Match Review
         </Button>
       </div>
 
-      {/* Daily Quests Section with clean spacious cards */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
+      {/* Daily Quests Section with generous breathing space above */}
+      <div className="space-y-5 pt-4">
+        <div className="flex items-center justify-between pb-1">
           <div className="flex items-center gap-2">
-            <h3 className="text-base font-black tracking-tight text-foreground">
+            <h3 className="text-base sm:text-lg font-black tracking-tight text-foreground">
               TÄGLICHE QUESTS
             </h3>
             <span className="text-xs font-mono font-bold text-muted-foreground">
@@ -227,11 +227,11 @@ export const HomeTab: React.FC<HomeTabProps> = ({ onNavigateTab }) => {
             </div>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {activeDailyQuests.slice(0, 4).map(quest => (
               <div
                 key={quest.id}
-                className="rounded-2xl bg-card border border-border/80 hover:border-purple-500/40 p-4 transition-all shadow-sm flex items-center justify-between gap-4"
+                className="rounded-2xl bg-card border border-border/80 hover:border-purple-500/40 p-4.5 sm:p-5 transition-all shadow-sm flex items-center justify-between gap-4"
               >
                 <div className="flex items-center gap-3.5 overflow-hidden">
                   <div className="w-11 h-11 rounded-2xl bg-muted/50 flex items-center justify-center shrink-0 border border-border/60">
